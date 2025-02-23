@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home | Johannesburg Water</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="{{ url_for('home') }}">Johannesburg Water</a>
+      <div class="collapse navbar-collapse">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('contact_us') }}">Contact Us</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <header class="bg-primary text-white text-center py-5">
+    <div class="container">
+      <h1>Welcome to Johannesburg Water</h1>
+      <p class="lead">Your trusted partner in digital water services</p>
+      <a href="{{ url_for('register') }}" class="btn btn-light btn-lg">Register Now</a>
+      <a href="{{ url_for('login') }}" class="btn btn-light btn-lg">Login Now</a>
+    </div>
+  </header>
+
+  <section class="py-5 bg-light">
+    <div class="container">
+      <h2 class="text-center mb-4">Our Address</h2>
+      <div class="text-center">
+        <p><strong>Turbine Hall</strong></p>
+        <p>65 Ntemi Piliso Street</p>
+        <p>Newtown, Johannesburg</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-5">
+    <div class="container">
+      <h2 class="text-center mb-4">Quick Links</h2>
+      <div class="row justify-content-center">
+        <div class="col-md-4">
+          <ul class="list-group">
+            <li class="list-group-item"><a href="mailto:customerserviceemails@jwater.co.za">Get in Touch</a></li>
+            <li class="list-group-item"><a href="mailto:customerserviceemails@jwater.co.za">Get in Touch</a></li>
+            <li class="list-group-item"><a href="mailto:customerserviceemails@jwater.co.za">Get in Touch</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-5 bg-light">
+    <div class="container">
+      <h2 class="text-center mb-4">Contact Information</h2>
+      <div class="text-center">
+        <p><strong>Reception:</strong> +27 (0) 11 688 1400</p>
+        <p><strong>SMS Line:</strong> +27 (0) 45 201</p>
+        <p><strong>Email:</strong> <a href="mailto:customerserviceemails@jwater.co.za">customerserviceemails@jwater.co.za</a></p>
+        <p><strong>Tip-offs Anonymous:</strong> +27 (0) 80 000 2587</p>
+        <p><strong>Call Centre:</strong> +27 (0) 11 375 5555 / +27 (0) 86 056 2874</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="bg-dark text-white text-center py-3">
+    <p>&copy; 2025 Johannesburg Water. All rights reserved.</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
