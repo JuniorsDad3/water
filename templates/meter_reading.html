@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Meter Reading</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        .preview-image {
+            max-width: 200px;
+            margin: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    {% include 'navbar.html' %}
+
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="mb-0">Submit Meter Reading</h3>
+                    </div>
+                    <div class="card-body">
+                        {% with messages = get_flashed_messages(with_categories=true) %}
+                            {% if messages %}
+                                {% for category, message in messages %}
+                                    <div class="alert alert-{{ category }} alert-dismissible fade show">
+                                        {{ message }}
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        {% endwith %}
+
+                        <form method="POST" enctype="multipart/form-data" id="meterForm">
+                            {{ form.hidden_tag() }}
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Upload Meter Images</label>
+                                <input type="file" class="form-control" name="images" multiple accept="image/*" id="imageUpload">
+                                <small class="form-text text-muted">You can upload multiple images (max 5, 2MB each)</small>
+                            </div>
+                            
+                            <div class="mb-3">
+                                {{ form.reading.label(class="form-label") }}
+                                {{ form.reading(class="form-control") }}
+                                <small class="form-text text-muted">Reading will be auto-detected from images</small>
+                            </div>
+                            
+                            <div id="imagePreview" class="mb-3"></div>
+                            
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="bi bi-check-circle"></i> Submit Reading
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                
+                <div class="mt-3 text-center">
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left"></i> Back to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('imageUpload').addEventListener('change', function(e) {
+            const maxSize = 200 * 1024 * 1024; // 200MB
+            const files = this.files;
+
+            if (files.length > 5) {
+                alert('Maximum 5 files allowed');
+                this.value = '';
+                return;
+            }
+
+            for (let file of files) {
+                if (file.size > maxSize) {
+                    alert(`File ${file.name} exceeds the maximum size of 2MB`);
+                    this.value = '';
+                    return;
+                }
+                if (!file.type.startsWith('image/')) {
+                    alert(`File ${file.name} is not an image`);
+                    this.value = '';
+                    return;
+                }
+            }
+
+            // Proceed with image preview and auto-submission
+            const preview = document.getElementById('imagePreview');
+            preview.innerHTML = '';
+            
+            Array.from(files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.className = 'preview-image';
+                    preview.appendChild(img);
+                }
+                reader.readAsDataURL(file);
+            });
+
+            // Auto-submit to process images
+            const formData = new FormData();
+            Array.from(files).forEach((file, i) => {
+                formData.append(`image_${i}`, file);
+            });
+
+            fetch('/process_images', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if(data.reading) {
+                    document.getElementById('{{ form.reading.id }}').value = data.reading;
+                }
+            })
+            .catch(error => {
+                console.error('Error processing images:', error);
+                alert('Failed to process images. Please try again.');
+            });
+        });
+
+        // Form submission validation
+        document.getElementById('meterForm').addEventListener('submit', function(e) {
+            const reading = document.getElementById('{{ form.reading.id }}').value;
+
+            if (!reading) {
+                e.preventDefault();
+                alert('Please enter a meter reading or upload images for auto-detection.');
+            }
+        });
+    </script>
+</body>
+</html>

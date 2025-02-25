@@ -1,0 +1,42 @@
+/* static/css/style.css */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header {
+    background-color: #007BFF;
+    color: white;
+    padding: 10px;
+    text-align: center;
+}
+
+h1 {
+    font-size: 2rem;
+}
+
+@media (max-width: 768px) {
+    body {
+        background-color: lightblue;
+    }
+    .container {
+        width: 100%;
+        padding: 15px;
+    }
+    header {
+        padding: 15px;
+        text-align: center;
+    }
+    h1 {
+        font-size: 1.5rem;
+    }
+}
