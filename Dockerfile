@@ -1,4 +1,4 @@
-# Use an official Python slim image as base (adjust version if needed)
+# Use an official Python slim image
 FROM python:3.11-slim
 
 # Set environment variables for Python
@@ -19,7 +19,7 @@ RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
     apt-get update -y && \
     ACCEPT_EULA=Y apt-get install -y msodbcsql18 odbcinst libodbc1
 
-# Set LD_LIBRARY_PATH so the driver can be found
+# Set LD_LIBRARY_PATH so the driver is found
 ENV LD_LIBRARY_PATH=/opt/microsoft/msodbcsql18/lib64:$LD_LIBRARY_PATH
 
 # Set the working directory
@@ -29,10 +29,10 @@ WORKDIR /app
 COPY requirements.txt /app/
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
-# Copy the rest of the application code
+# Copy the rest of your application code
 COPY . /app/
 
-# Expose the port your application will run on (adjust if needed)
+# Expose the port your application runs on
 EXPOSE 10000
 
 # Command to run your application
