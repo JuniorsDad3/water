@@ -1,7 +1,7 @@
 # Use an official Python slim image
 FROM python:3.11-slim
 
-# Set environment variables for Python
+# Prevent Python from writing .pyc files and enable unbuffered logging
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
@@ -32,7 +32,7 @@ RUN pip install --upgrade pip && pip install -r requirements.txt
 # Copy the rest of your application code
 COPY . /app/
 
-# Expose the port your application runs on
+# Expose the port your application runs on (adjust if needed)
 EXPOSE 10000
 
 # Command to run your application
