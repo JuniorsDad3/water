@@ -13,9 +13,9 @@ RUN apt-get update -y && apt-get install -y \
     unixodbc \
     unixodbc-dev
 
-# Add Microsoft repository and install ODBC Driver 18 for SQL Server
-RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
-    curl https://packages.microsoft.com/config/ubuntu/20.04/prod.list > /etc/apt/sources.list.d/mssql-release.list && \
+# Add Microsoft repository using gpg --dearmor and install ODBC Driver 18 for SQL Server
+RUN curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > /etc/apt/trusted.gpg.d/microsoft.gpg && \
+    curl https://packages.microsoft.com/config/ubuntu/20.04/prod.list > /etc/apt/sources.list.d/mssql-release.list
 
 # Update package lists and install the ODBC driver packages
 RUN apt-get update -y && \
@@ -23,6 +23,9 @@ RUN apt-get update -y && \
 
 # Set LD_LIBRARY_PATH so the driver is found
 ENV LD_LIBRARY_PATH=/opt/microsoft/msodbcsql18/lib64:$LD_LIBRARY_PATH
+
+# Diagnostic: List the contents of the ODBC driver directory to verify installation
+RUN ls -l /opt/microsoft/msodbcsql18/lib64
 
 # Set the working directory
 WORKDIR /app
