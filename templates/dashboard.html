@@ -6,28 +6,36 @@
   <title>Dashboard</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <style>
+    /* Additional custom styles */
+    .card-header { font-weight: bold; }
+    .search-input { max-width: 300px; margin-bottom: 1rem; }
+    .tip-icon { font-size: 1.5rem; margin-right: 0.5rem; }
+  </style>
 </head>
 <body>
   {% include 'navbar.html' %}
   <div class="container py-5">
-    <h2 class="text-center mb-3">Welcome, {{ user_data.username }}</h2>
+    <h2 class="text-center mb-4">Welcome, {{ user_data.username }}</h2>
 
-<!-- Water Consumption Chart -->
-<div class="card mb-4">
-  <div class="card-body">
-    <h4>Water Consumption</h4>
-    <div style="height: 300px;">
-      <canvas id="usageChart" style="width: 100%;"></canvas>
-    </div>
-  </div>
-
-    <!-- Submitted Meter Readings -->
+    <!-- Water Consumption Chart -->
     <div class="card mb-4">
+      <div class="card-header bg-info text-white">Water Consumption</div>
       <div class="card-body">
-        <h4>Submitted Meter Readings</h4>
+        <div style="height: 300px;">
+          <canvas id="usageChart" style="width: 100%;"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Submitted Meter Readings with Search -->
+    <div class="card mb-4">
+      <div class="card-header bg-success text-white">Submitted Meter Readings</div>
+      <div class="card-body">
+        <input type="text" id="readingSearch" class="form-control search-input" placeholder="Search readings...">
         {% if readings %}
           <div class="table-responsive">
-            <table class="table table-striped">
+            <table class="table table-striped" id="readingTable">
               <thead>
                 <tr>
                   <th>Reading (liters)</th>
@@ -58,13 +66,14 @@
       </div>
     </div>
 
-    <!-- Fault Reports -->
+    <!-- Fault Reports with Search -->
     <div class="card mb-4">
+      <div class="card-header bg-danger text-white">Fault Reports</div>
       <div class="card-body">
-        <h4>Fault Reports</h4>
+        <input type="text" id="faultSearch" class="form-control search-input" placeholder="Search fault reports...">
         {% if reports %}
           <div class="table-responsive">
-            <table class="table table-striped">
+            <table class="table table-striped" id="faultTable">
               <thead>
                 <tr>
                   <th>Description</th>
@@ -99,24 +108,44 @@
       </div>
     </div>
 
-    <!-- Water Conservation Tips -->
+    <!-- Enhanced Water Conservation Tips -->
     <div class="card">
+      <div class="card-header bg-secondary text-white">Water Conservation Tips</div>
       <div class="card-body">
-        <h4>Water Conservation Tips</h4>
-        <ul>
-          {% for tip in tips %}
-          <li><strong>{{ tip.text }}:</strong> {{ tip.details }}</li>
-          {% endfor %}
+        <ul class="list-unstyled">
+          <li class="mb-2">
+            <i class="bi bi-droplet tip-icon text-primary"></i>
+            <strong>Shorter Showers:</strong> Save up to 20 liters per minute.
+          </li>
+          <li class="mb-2">
+            <i class="bi bi-wind tip-icon text-info"></i>
+            <strong>Fix Leaks:</strong> A dripping tap wastes about 15 liters per day.
+          </li>
+          <li class="mb-2">
+            <i class="bi bi-house-door tip-icon text-success"></i>
+            <strong>Efficient Appliances:</strong> Use water-efficient fixtures to cut down usage.
+          </li>
+          <li class="mb-2">
+            <i class="bi bi-tree tip-icon text-warning"></i>
+            <strong>Water Your Garden Wisely:</strong> Water during cooler parts of the day.
+          </li>
+          <li class="mb-2">
+            <i class="bi bi-bucket tip-icon text-danger"></i>
+            <strong>Reuse Greywater:</strong> Consider reusing water for gardening or cleaning.
+          </li>
         </ul>
       </div>
     </div>
   </div>
 
-<!-- Chart.js Script -->
+  <!-- Scripts -->
+  <!-- Bootstrap Bundle (includes Popper) for mobile functionality -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", function () {
+      // Initialize Chart
       const chartData = {
         labels: {{ chart_data['labels'] | tojson | safe }},
         datasets: [{
@@ -128,7 +157,6 @@
           borderWidth: 2
         }]
       };
-
       const ctx = document.getElementById('usageChart').getContext('2d');
       new Chart(ctx, {
         type: 'line',
@@ -137,6 +165,24 @@
           responsive: true,
           maintainAspectRatio: false
         }
+      });
+
+      // Simple client-side search for Meter Readings
+      document.getElementById('readingSearch').addEventListener('keyup', function () {
+        const value = this.value.toLowerCase();
+        const rows = document.querySelectorAll("#readingTable tbody tr");
+        rows.forEach(row => {
+          row.style.display = row.textContent.toLowerCase().includes(value) ? "" : "none";
+        });
+      });
+
+      // Simple client-side search for Fault Reports
+      document.getElementById('faultSearch').addEventListener('keyup', function () {
+        const value = this.value.toLowerCase();
+        const rows = document.querySelectorAll("#faultTable tbody tr");
+        rows.forEach(row => {
+          row.style.display = row.textContent.toLowerCase().includes(value) ? "" : "none";
+        });
       });
     });
   </script>
