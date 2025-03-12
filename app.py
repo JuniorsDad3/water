@@ -30,7 +30,7 @@ app.config['MAX_CONTENT_LENGTH'] = 200 * 1024 * 1024
 app.config['SECURITY_PASSWORD_SALT'] = os.getenv('SECURITY_PASSWORD_SALT')
 
 serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
-pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+pytesseract.pytesseract.tesseract_cmd = '/usr/bin/tesseract'
 
 # Email configuration for Gmail
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'

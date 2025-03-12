@@ -5,7 +5,7 @@ echo "Updating package lists..."
 apt-get update -y
 
 echo "Installing prerequisites..."
-apt-get install -y apt-transport-https curl gnupg2 unixodbc unixodbc-dev
+apt-get install -y apt-transport-https curl gnupg2 unixodbc unixodbc-dev tesseract-ocr
 
 echo "Adding Microsoft repository..."
 curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
