@@ -43,7 +43,7 @@
                             <div class="mb-3">
                                 <label class="form-label">Upload Meter Images</label>
                                 <input type="file" class="form-control" name="images" multiple accept="image/*" id="imageUpload">
-                                <small class="form-text text-muted">You can upload multiple images (max 5, 2MB each)</small>
+                                <small class="form-text text-muted">You can upload up to 5 images (max 40MB each)</small>
                             </div>
                             
                             <div class="mb-3">
@@ -70,9 +70,12 @@
         </div>
     </div>
 
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         document.getElementById('imageUpload').addEventListener('change', function(e) {
-            const maxSize = 200 * 1024 * 1024; // 200MB
+            const perFileLimit = 40 * 1024 * 1024; // 40MB per file
             const files = this.files;
 
             if (files.length > 5) {
@@ -82,8 +85,8 @@
             }
 
             for (let file of files) {
-                if (file.size > maxSize) {
-                    alert(`File ${file.name} exceeds the maximum size of 2MB`);
+                if (file.size > perFileLimit) {
+                    alert(`File ${file.name} exceeds the maximum allowed size of 40MB.`);
                     this.value = '';
                     return;
                 }
@@ -94,7 +97,7 @@
                 }
             }
 
-            // Proceed with image preview and auto-submission
+            // Show preview of images
             const preview = document.getElementById('imagePreview');
             preview.innerHTML = '';
             
@@ -109,7 +112,7 @@
                 reader.readAsDataURL(file);
             });
 
-            // Auto-submit to process images
+            // Auto-submit images for processing
             const formData = new FormData();
             Array.from(files).forEach((file, i) => {
                 formData.append(`image_${i}`, file);
@@ -139,7 +142,6 @@
         // Form submission validation
         document.getElementById('meterForm').addEventListener('submit', function(e) {
             const reading = document.getElementById('{{ form.reading.id }}').value;
-
             if (!reading) {
                 e.preventDefault();
                 alert('Please enter a meter reading or upload images for auto-detection.');

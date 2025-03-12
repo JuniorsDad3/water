@@ -30,6 +30,7 @@ app.config['MAX_CONTENT_LENGTH'] = 200 * 1024 * 1024
 app.config['SECURITY_PASSWORD_SALT'] = os.getenv('SECURITY_PASSWORD_SALT')
 
 serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
 # Email configuration for Gmail
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
@@ -465,6 +466,9 @@ def report_fault():
             new_fault.image = ','.join(image_paths) if image_paths else None
             db.session.add(new_fault)
             db.session.commit()
+            new_fault.reference_number = f"WR-{new_fault.id}-{int(datetime.utcnow().timestamp())}"
+            flash(f"Fault report submitted successfully! Reference Number: {new_fault.reference_number}", "success")
+
 
             # Analyze fault location for clustering (if applicable)
             analyze_fault_location(new_fault.id)

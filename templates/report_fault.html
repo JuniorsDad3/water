@@ -131,9 +131,7 @@
             }).addTo(map);
 
             // Initialize marker
-            marker = L.marker([-26.2041, 28.0473], {
-                draggable: true
-            }).addTo(map);
+            marker = L.marker([-26.2041, 28.0473], { draggable: true }).addTo(map);
 
             // Add geocoder control
             const geocoder = L.Control.geocoder({
@@ -180,7 +178,7 @@
                             document.getElementById('address').value = data.display_name;
                         }
                     });
-            }, 500); // Wait 500ms before making the request
+            }, 500);
         }
 
         function locateUser() {
@@ -210,7 +208,7 @@
 
         // Image upload validation
         document.getElementById('imageUpload').addEventListener('change', function(e) {
-            const maxSize = 200 * 1024 * 1024; // 200MB
+            const perFileLimit = 40 * 1024 * 1024; // 40MB per file
             const files = this.files;
 
             if (files.length > 5) {
@@ -220,8 +218,8 @@
             }
 
             for (let file of files) {
-                if (file.size > maxSize) {
-                    alert(`File ${file.name} exceeds the maximum size of 2MB`);
+                if (file.size > perFileLimit) {
+                    alert(`File ${file.name} exceeds the maximum allowed size of 40MB per file.`);
                     this.value = '';
                     return;
                 }
